@@ -87,12 +87,12 @@ def creatTree(dataSet,labels):
     Args:
         dataSet是数据集合
         labels是属性说明
-    这是创建决策树的主流程
-    创建树的过程是递归的
     伪代码如下：
-        得到所有类别
-        判断如果只剩一类就结束
-
+        if 数据集合中只要一类
+            结束
+        if 使用完了所有的数据
+            结束
+        从当前数据集中选择最好的分类属性
         选择当前数据集合中最好的分类属性,labels是属性说明
         bestFeatLabel=找出最好的属性
         表示树：myTree = {bestFeatLabel:{}}，这里是通过dict来表示一棵树的，
