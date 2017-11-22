@@ -1,5 +1,5 @@
 from math import log
-
+import operator
 '''
 calcShanonEnt函数主要是计算信息熵
 '''
@@ -71,3 +71,30 @@ def chooseBestFeaturesToSplit(dataSet):
                 bestInfoGain = infoGain
                 bestFeature = i
         return bestFeature
+
+def majorityCnt(classList):
+    classCount = {}
+    for vote in classList:
+        if vote not in classCount.keys():classCount[vote]= 0
+        classCount[vote] +=1
+    sortedClassCount = sorted(classCount.items(),key=operator.items(1),reverse = True)
+    return sortedClassCount[0][0]
+
+
+def creatTree(dataSet,labels):
+    classList = [example[-1] for example in dataSet]
+    if classList.count(classList[0])==len(classList):#类别完全相同就停止划分
+        return classList[0]
+    if len(dataSet[0]) ==1:
+        return majorityCnt(classList)
+
+    bestFeat = chooseBestFeaturesToSplit(dataSet)
+    bestFeatLabel = labels[bestFeat]
+    myTree = {bestFeatLabel:{}}
+    del(labels[bestFeat])
+    featValues = [example[bestFeat] for example in dataSet]
+    uniqueVals = set(featValues)
+    for value in uniqueVals:
+        subLabels = labels[:]
+        myTree[bestFeatLabel][value]=creatTree(splitDataSet(dataSet,bestFeat,value),subLabels)
+    return myTree
