@@ -81,13 +81,30 @@ def majorityCnt(classList):
     return sortedClassCount[0][0]
 
 
+
 def creatTree(dataSet,labels):
+    """
+    Args:
+        dataSet是数据集合
+        labels是属性说明
+    这是创建决策树的主流程
+    创建树的过程是递归的
+    伪代码如下：
+        得到所有类别
+        判断如果只剩一类就结束
+
+        选择当前数据集合中最好的分类属性,labels是属性说明
+        bestFeatLabel=找出最好的属性
+        表示树：myTree = {bestFeatLabel:{}}，这里是通过dict来表示一棵树的，
+        然后被最好分类属性的取值放在一个数组里，featValues
+        然后分割数据集，构造子树，其中上面有几个属性值就循环几次
+
+    """
     classList = [example[-1] for example in dataSet]
     if classList.count(classList[0])==len(classList):#类别完全相同就停止划分
         return classList[0]
     if len(dataSet[0]) ==1:
         return majorityCnt(classList)
-
     bestFeat = chooseBestFeaturesToSplit(dataSet)
     bestFeatLabel = labels[bestFeat]
     myTree = {bestFeatLabel:{}}
