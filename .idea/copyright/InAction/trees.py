@@ -32,5 +32,42 @@ def creatDataSet():
                [1,0,'no'],
                [0,1,'no'],
                [0,1,'no']]
-    labels = ['no surfacing',flippers]
+    labels = ['no surfacing','flippers']
     return dataSet,labels
+
+def splitDataSet(dataSet,axis,value):
+    """
+    Args:
+        其中dataSet是要处理的数据集,axis是要处理的第几个维度，value是给定的特征
+    return：
+        返回的将是符合特征的数据集的子集
+    """
+    retDataSet = []
+    for featVec in dataSet:
+        if featVec[axis]==value:
+            reducedFearVec = featVec[:axis]
+            reducedFearVec.extend(featVec[axis+1:])#extend可以理解为是合并
+            retDataSet.append(reducedFearVec)#append是添加一个元素
+    return retDataSet
+
+def chooseBestFeaturesToSplit(dataSet):
+    """
+    这个函数用于选择最好的特征值
+    """
+    numFeatures = len(dataSet[0]) -1#特征的个数
+    baseEntropy =calcShanonEnt(dataSet)#计算最初的信息熵
+    bestInfoGain =0.0
+    bestFeature = -1
+    for i in list(range(numFeatures)):
+        featList = [example[i] for example in dataSet]
+        uniqueVals = set(featList)
+        newEntropy = 0.0
+        for value in uniqueVals:
+            subDataSet = splitDataSet(dataSet,i,value)
+            prob = len(subDataSet)/float(len(dataSet))
+            newEntropy+=prob*calcShanonEnt(subDataSet)
+            infoGain = baseEntropy-newEntropy#大于零的意思是说这个信息熵在减少
+            if(infoGain > bestInfoGain):
+                bestInfoGain = infoGain
+                bestFeature = i
+        return bestFeature
